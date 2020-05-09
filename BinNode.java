@@ -59,6 +59,8 @@ public class BinNode extends Node {
 	public BinNode(int value) {
 		this(null, null, value);
 	}
+	
+	public BinNode() {}
 
 	/***********************
 	 * end of initializers *

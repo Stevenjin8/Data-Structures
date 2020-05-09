@@ -29,6 +29,8 @@ public class Node {
 		this.value = value;
 	}
 	
+	public Node() {}
+	
 	/***********************
 	 * end of initializers *
 	 ***********************/

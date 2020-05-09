@@ -1,4 +1,4 @@
-public class Tree {
+public class BinaryTree {
 	
 	/*
 	 * root of tree
@@ -7,8 +7,42 @@ public class Tree {
 	
 	private int size = 0;
 	
+	/***********************
+	 * Setters and getters *
+	 * *********************/
+	
+	public int getSize() {
+		return size;
+	}
+	
+	/*******************************
+	 * end of setters and getters *
+	 *******************************/
+	
+	/****************
+	 * initializers *
+	 ****************/
+	
+	public BinaryTree(int[] list) {
+		insert(list);
+	}
+	
+	public BinaryTree(int root) {
+		this.root = new BinNode(root);
+	}
+	
+	public BinaryTree() {}
+
+	/***********************
+	 * end of initializers *
+	 ***********************/
+	
 	/*
 	 * inserts element into tree
+	 */
+
+	/*
+	 * inserts an element
 	 */
 	private void insert(BinNode node, BinNode start) {
 		if (node.getValue() <= start.getValue()) {
@@ -27,9 +61,9 @@ public class Tree {
 		
 		this.size++;
 	}
-	
+
 	public void insert(int value) {
-		if (this.root = null) {
+		if (this.root == null) {
 			this.root = new BinNode(value);
 		} else {
 			BinNode node = new BinNode(value);
@@ -37,14 +71,14 @@ public class Tree {
 		}
 	}
 	
-	public void insert (int[] values) {
+	public void insert(int[] values) {
 		for (int x: values) {
 			insert(x);
 		}
 	}
 	
 	/*
-	 * gets minimun value of the tree
+	 * gets minimum value of the tree
 	 */
 	public BinNode getMin() {
 		BinNode current = root;
@@ -55,7 +89,7 @@ public class Tree {
 	}
 	
 	/*
-	 * gets the maximun value of the tree
+	 * gets the maximum value of the tree
 	 */
 	public BinNode getMax() {
 		BinNode current = root;
@@ -84,50 +118,49 @@ public class Tree {
 	public boolean contains(int val) {
 		return contains(val, this.root);
 	}
-
+	
+	
+	/*
+	 * prints items in order
+	 */
 	public void InOrderPrintTraverse(BinNode node) {
 		if (node.getLeftChild() != null) {
-			printTraverse(node.getLeftChild());
+			InOrderPrintTraverse(node.getLeftChild());
 		}
 		
 		System.out.print(node.getValue());
 		
 		if (node.getRightChild() != null) {
-			printTraverse(node.getRightChild());
+			InOrderPrintTraverse(node.getRightChild());
 		}
 	}
 
-	public void traverse(BinNode node, LinkedList list) {
+	public void array(BinNode node, LinkedList list) {
 		if (node.getLeftChild() != null) {
-			traverse(node.getLeftChild(), list);
+			array(node.getLeftChild(), list);
 		}
 		list.push(node.getValue());
 		if (node.getRightChild() != null) {
-			traverse(node.getRightChild(), list);
+			array(node.getRightChild(), list);
 		}
 	}
-	public int[] traverse() {
+	
+	public int[] array() {
 		LinkedList list = new LinkedList();
-		traverseHelper(root, list);
+		array(root, list);
 		return list.toArray();
 	}
 
-	public Tree(int[] list) {
-		insert(list);
-	}
-	
-	public Tree(int root) {
-		this.root = root;
-	}
-	
-	public Tree() {}
-
 	public static void main(String[] args) {
-		Tree t = new Tree(new int[]{1,2,3,1,2,5,0,100,3,8,5,3,5});
+		BinaryTree t = new BinaryTree(new int[]{1,2,3});
 		//t.printTraverse(t.root);
-		for (int i : t.traverse()) {
+		int[] l = {1,2,3};
+		t.insert(l);
+		for (int i : t.array()) {
 			System.out.println(i);
 		}
+		
+		System.out.println(t.contains(3));
 	}
 
 }

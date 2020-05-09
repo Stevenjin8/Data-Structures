@@ -18,6 +18,10 @@ public class BinNode extends Node {
 	 * setters and getters *
 	 ***********************/
 	
+	public boolean hasParent() {
+		return !(this.parent == null);
+	}
+	
 	public BinNode getParent() {
 		return parent;
 	}
@@ -42,9 +46,13 @@ public class BinNode extends Node {
 		this.rightChild = rightChild;
 	}
 	
-	/*******************************
+	/******************************
 	 * end of setters and getters *
 	 *******************************/
+	
+	public String toString() {
+		return Integer.toString(this.getValue());
+	}
 	
 	/****************
 	 * initializers *

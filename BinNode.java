@@ -15,8 +15,8 @@ public class BinNode extends Node {
 	private BinNode rightChild;
 	
 	/***********************
-	 * Setters and getters *
-	 * *********************/
+	 * setters and getters *
+	 ***********************/
 	
 	public BinNode getParent() {
 		return parent;
@@ -49,20 +49,15 @@ public class BinNode extends Node {
 	/****************
 	 * initializers *
 	 ****************/
-	
-	public BinNode(BinNode parent, BinNode leftChild, BinNode rightChild, int value) {
-		super(value);
-		this.parent = parent;
-		this.leftChild = leftChild;
-		this.rightChild = leftChild;
-	}
 
 	public BinNode(BinNode leftChild, BinNode rightChild, int value) {
-		this(null, leftChild, rightChild, value);
+		super(value);
+		this.leftChild = leftChild;
+		this.rightChild = rightChild;
 	}
 
 	public BinNode(int value) {
-		this(null, null, null, value);
+		this(null, null, value);
 	}
 
 	/***********************

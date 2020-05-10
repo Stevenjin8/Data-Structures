@@ -11,20 +11,16 @@ public class AVLTree extends BinaryTree {
 	 * end of setters and getters *
 	 *******************************/
 	
-	private AVLNode alpha(AVLNode leaf) {
-		AVLNode current = leaf;
-		while (current.balanceFactor() <= 1) {
-			current = current.getParent();
-		}
-		return current;
-	}
+
 	
 	/*
 	 * updates the depth of nodes starting from a bottom node
+	 * could make is so that it stops early, but not working
 	 */
 	private void updateDepths(AVLNode bottom) {
-		bottom = bottom.getParent();
-		while (bottom.updateDepth() && bottom.hasParent()) {
+		print("------------");
+		while (bottom.hasParent()) {
+			bottom.updateDepth();
 			bottom = bottom.getParent();
 		}
 		
@@ -34,43 +30,86 @@ public class AVLTree extends BinaryTree {
 	 * finds alpha
 	 */
 	private AVLNode findAlpha(AVLNode bottom) {
-		while (bottom.balanceFactor() < 2) {
-			bottom = bottom.getParent();
+		if (bottom.balanceFactor() > 1) {
+			return bottom;
+		} else if (bottom == this.root) {
+			return null;
+		} else {
+			return findAlpha(bottom.getParent());
 		}
-		
-		return bottom;
 	}
 	
 	/*
-	 * finds which node x is under
+	 * returns insertion type
 	 */
-	private AVLNode isUnder(AVLNode a, AVLNode b, AVLNode c, AVLNode d, AVLNode x) {
-		if (a != null && x == a) {
-			return a;
-		} else if (b != null && x == b) {
-			return b;
-		} else if (c != null && x == c) {
-			return c;
-		} else if (d != null && x == d) {
-			return d;
+	public String insertionType(AVLNode alpha) {
+		AVLNode firstChild;
+		String out = "";
+		if (alpha.getLeftChild() == null || alpha.getRightChild().getDepth() > alpha.getLeftChild().getDepth()) {
+			firstChild = alpha.getRightChild();
+			out += "R";
 		} else {
-			return isUnder(a, b, c, d, x.getParent());
+			firstChild = alpha.getLeftChild();
+			out += "L";
 		}
+		if (firstChild.getLeftChild() == null) {
+			out += "R";
+		} else if (firstChild.getRightChild() == null) {
+			out += "L";
+		} else if (firstChild.getRightChild().getDepth() > firstChild.getLeftChild().getDepth()) {
+			out += "R";
+		} else if (firstChild.getRightChild().getDepth() < firstChild.getLeftChild().getDepth()) {
+			out += "L";
+		}
+		return out;
 	}
+
+	/*
+	 * inserts a node
+	 */
 	
+	/*
+	 * inserts, updates depth and balances
+	 */
 	public void insert(int val) {
+		//print("IN correct insert");
 		AVLNode x = new AVLNode(val);
 		if (this.root == null) {
 			this.root = x;
 		} else {
 			insert(this.root,x);
 		}
+		
+		updateDepths(x);
+		
+		AVLNode alpha = findAlpha(x);
+		
+		if (alpha == null) {
+		} else {
+			String type = insertionType(alpha);
+			
+			if (type.contentEquals("RR")) {
+				CCRotate(alpha);
+			} else if (type.contentEquals("RR")) {
+				CWRotate(alpha);
+			} else if (type.contentEquals("RL")) {
+				
+	
+				CWRotate(alpha.getRightChild());
+				CCRotate(alpha);
+			} else if (type.contentEquals("LR")) {
+				CCRotate(alpha.getLeftChild());
+				CWRotate(alpha);
+			}
+		}
+		
 	}
 	
 	/*
-	 * inserts a node
+	 * insert and updates depth, does not balance;
 	 */
 	private void insert(AVLNode current, AVLNode x) {
+		
 		if (x.getValue() > current.getValue()) {
 			if (current.getRightChild() == null) {
 				current.setRightChild(x);
@@ -88,8 +127,56 @@ public class AVLTree extends BinaryTree {
 			}
 		}
 		
-		updateDepths(x);
-		
+	}
+	
+	private void CCRotate(AVLNode alpha) {
+		if (alpha != this.root) {
+			AVLNode parent = alpha.getParent();
+			AVLNode y = alpha.getRightChild();
+			AVLNode a = y.getLeftChild();
+			if (parent.getRightChild() == alpha) {
+				parent.setRightChild(y);
+			} else if (parent.getLeftChild() == alpha) {
+				parent.setLeftChild(y);
+			}
+			y.setLeftChild(alpha);
+			alpha.setRightChild(a);
+			alpha.updateDepth();
+			y.updateDepth();
+		} else if (alpha == this.root) {
+			AVLNode y = alpha.getRightChild();
+			AVLNode a = y.getLeftChild();
+			y.setLeftChild(alpha);
+			alpha.setRightChild(a);
+			this.root = y;
+			alpha.updateDepth();
+			y.updateDepth();
+		}
+	}
+	
+	private void CWRotate(AVLNode alpha) {
+		if (alpha != this.root) {
+			AVLNode parent = alpha.getParent();
+			AVLNode x = alpha.getLeftChild();
+			AVLNode b = x.getRightChild();
+			x.setRightChild(alpha);
+			alpha.setLeftChild(b);
+			if (parent.getLeftChild() == alpha) {
+				parent.setLeftChild(x);
+			} else if (parent.getRightChild() == alpha) {
+				parent.setRightChild(x);
+			}
+			alpha.updateDepth();
+			x.updateDepth();
+		} else {
+			AVLNode x = alpha.getLeftChild();
+			AVLNode b = x.getRightChild();
+			x.setRightChild(alpha);
+			alpha.setLeftChild(b);
+			this.root = x;
+			alpha.updateDepth();
+			x.updateDepth();
+		}
 	}
 	
 	/****************
@@ -105,15 +192,12 @@ public class AVLTree extends BinaryTree {
 	}
 	
 	public static void main(String args[]) {
-		AVLTree t = new AVLTree();
-		t.insert(10);
-		t.insert(15);
-		t.insert(5);
-		t.insert(3);
-		t.insert(0);
-		AVLNode x = t.root.getLeftChild().getLeftChild().getLeftChild();
-		AVLNode alpha = t.alpha(x);
-		//print(x.getParent().balanceFactor());
-		print(alpha);
+//		AVLTree t = new AVLTree();
+//		t.insert(new int[] {1,2,3,4,40,7});
+//		print(t.root);
+//		print(t.root.getRightChild());
+//		print(t.root.getLeftChild().getLeftChild());
+//		print(t.root.getRightChild().getLeftChild());
+//		//print(t.root.getRightChild().getRightChild().getLeftChild());
 	}
 }

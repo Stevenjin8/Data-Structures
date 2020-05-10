@@ -33,27 +33,6 @@ public class AVLNode extends BinNode {
 		this.depth = depth;
 	}
 	
-	/*
-	 * updates the depth field of the node given its children
-	 * returns whether the depth was changed
-	 */
-	public boolean updateDepth() {
-		int original = this.depth;
-		if (leftChild == null && rightChild == null) {
-			this.depth = 0;
-		} else if (leftChild == null) {
-			this.depth = rightChild.getDepth() + 1;
-		} else if (rightChild == null) {
-			this.depth = leftChild.getDepth() + 1;
-		} else if (leftChild.getDepth() > rightChild.getDepth()) {
-			this.depth = leftChild.getDepth() + 1;
-		} else if (leftChild.getDepth() <= rightChild.getDepth()) {
-			this.depth = rightChild.getDepth() +1;
-		}
-		
-		return original == this.depth;
-	}
-	
 	public AVLNode getParent() {
 		return parent;
 	}
@@ -85,6 +64,27 @@ public class AVLNode extends BinNode {
 	/*******************************
 	 * end of setters and getters *
 	 *******************************/
+	
+	/*
+	 * updates the depth field of the node given its children
+	 * returns whether the depth was changed
+	 */
+	public boolean updateDepth() {
+		int original = this.depth;
+		if (leftChild == null && rightChild == null) {
+			this.depth = 0;
+		} else if (leftChild == null) {
+			this.depth = rightChild.getDepth() + 1;
+		} else if (rightChild == null) {
+			this.depth = leftChild.getDepth() + 1;
+		} else if (leftChild.getDepth() > rightChild.getDepth()) {
+			this.depth = leftChild.getDepth() + 1;
+		} else if (leftChild.getDepth() <= rightChild.getDepth()) {
+			this.depth = rightChild.getDepth() +1;
+		}
+		
+		return original == this.depth;
+	}
 	
 	/*
 	 * increases depth field of this node
